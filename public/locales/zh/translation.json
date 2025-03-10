@@ -1,0 +1,33 @@
+{
+  "site": {
+    "title": "温森的博客",
+    "description": "一个有态度的 Astro 主题"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "blog": "博客文章",
+    "notes": "随手记",
+    "docs": "文档",
+    "wakeUp": "醒醒"
+  },
+  "home": {
+    "intro": "你好，我是温森",
+    "description": "欢迎来到我的个人博客，这里记录着我对技术和生活的思考。",
+    "readBlog": "阅读博客"
+  },
+  "sections": {
+    "posts": "最新文章",
+    "notes": "随手记"
+  },
+  "languages": {
+    "select": "选择语言",
+    "en": "English",
+    "zh": "中文"
+  },
+  "footer": {
+    "powered_by": "由",
+    "and": "和",
+    "theme_by": "驱动，主题作者："
+  }
+} 

@@ -1,0 +1,26 @@
+---
+// 该组件负责加载和初始化i18n
+---
+
+<script>
+  // 客户端初始化i18n
+  import { initializeLanguage } from '../i18n/loader';
+  import { siteConfig } from '../site.config';
+  
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 初始化语言
+    const currentLang = await initializeLanguage();
+    
+    // 根据当前语言更新HTML的lang属性
+    if (currentLang === 'zh') {
+      document.documentElement.lang = 'zh-CN';
+    } else {
+      document.documentElement.lang = 'en-GB';
+    }
+    
+    // 触发自定义事件以通知语言已加载
+    document.dispatchEvent(new CustomEvent('i18n-initialized'));
+  });
+</script>
+
+<slot /> 

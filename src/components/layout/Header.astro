@@ -1,6 +1,7 @@
 ---
 import Search from "@/components/Search.astro";
 import ThemeToggle from "@/components/ThemeToggle.astro";
+import LanguageSelector from "@/components/LanguageSelector.astro";
 import { siteConfig, menuLinks } from "@/site.config";
 import { Icon } from "astro-icon/components";
 ---
@@ -85,9 +86,10 @@ import { Icon } from "astro-icon/components";
 					menuLinks.map((link) => (
 						<a
 							aria-current={Astro.url.pathname === link.path ? "page" : false}
-							class="underline-offset-2 hover:underline"
+							class="underline-offset-2 hover:underline i18n-text"
 							data-astro-prefetch
 							href={link.path}
+							data-i18n={`nav.${link.title.toLowerCase()}`}
 						>
 							{link.title}
 						</a>
@@ -157,6 +159,7 @@ import { Icon } from "astro-icon/components";
 				<div id="buttons-panel" class="top-4 md:top-8 -ml-[4.5rem] flex space-x-2">
 					<Search />
 					<ThemeToggle />
+					<LanguageSelector />
 				</div>
 			</div>	
 			
@@ -221,9 +224,10 @@ import { Icon } from "astro-icon/components";
 				menuLinks.map((link) => (
 					<a
 						aria-current={Astro.url.pathname === link.path ? "page" : false}
-						class="underline-offset-2 hover:underline"
+						class="underline-offset-2 hover:underline i18n-text"
 						data-astro-prefetch
 						href={link.path}
+						data-i18n={`nav.${link.title.toLowerCase()}`}
 					>
 						{link.title}
 					</a>

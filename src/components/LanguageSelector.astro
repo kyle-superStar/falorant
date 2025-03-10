@@ -1,0 +1,152 @@
+---
+const { lang = 'en' } = Astro.locals;
+---
+
+<div class="language-selector">
+  <button
+    id="language-button"
+    class="p-2 hover:bg-accent-base/10 rounded-lg relative"
+    type="button"
+    aria-label="选择语言"
+  >
+    <span class="text-accent-two">🌐</span>
+  </button>
+  <div 
+    id="language-menu" 
+    class="dropdown-menu hidden absolute bg-bgColor rounded-lg shadow-lg border border-special-lighter py-2"
+  >
+    <ul class="text-sm">
+      <li>
+        <button 
+          class="w-full text-left px-4 py-2 hover:bg-accent-base/5 language-btn" 
+          data-language="en"
+        >
+          English
+        </button>
+      </li>
+      <li>
+        <button 
+          class="w-full text-left px-4 py-2 hover:bg-accent-base/5 language-btn" 
+          data-language="zh"
+        >
+          中文
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .language-selector {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    min-width: 120px;
+    z-index: 9999;
+    background-color: var(--bgColor);
+  }
+
+  /* 确保下拉菜单在其他元素之上 */
+  .language-selector:focus-within .dropdown-menu,
+  .language-selector:hover .dropdown-menu,
+  .dropdown-menu:not(.hidden) {
+    z-index: 9999;
+  }
+
+  /* 添加一些动画效果 */
+  .dropdown-menu {
+    transform-origin: top right;
+    transition: all 0.1s ease-out;
+  }
+
+  .dropdown-menu:not(.hidden) {
+    animation: dropdownShow 0.1s ease-out;
+  }
+
+  @keyframes dropdownShow {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>
+
+<script>
+  import i18next from '../i18n/config';
+
+  // 获取当前URL的语言和路径
+  function getCurrentPathInfo() {
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(Boolean);
+    const isLangPath = ['zh'].includes(segments[0]); // en 是默认语言，不需要在 URL 中显示
+    const currentLang = isLangPath ? segments[0] : 'en';
+    const restPath = isLangPath ? segments.slice(1) : segments;
+    return { currentLang, restPath: restPath.length > 0 ? restPath : [''] };
+  }
+
+  // 生成新的URL
+  function generateNewUrl(lang: string) {
+    const { restPath } = getCurrentPathInfo();
+    const basePath = window.location.origin;
+    if (lang === 'en') {
+      // 英语是默认语言，不需要语言前缀
+      return `${basePath}/${restPath.join('/')}`;
+    }
+    return `${basePath}/${lang}/${restPath.join('/')}`;
+  }
+
+  const button = document.getElementById('language-button');
+  const menu = document.getElementById('language-menu');
+  
+  // 切换菜单显示
+  button?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    menu?.classList.toggle('hidden');
+  });
+
+  // 点击外部关闭菜单
+  document.addEventListener('click', (event) => {
+    if (!button?.contains(event.target as Node) && !menu?.contains(event.target as Node)) {
+      menu?.classList.add('hidden');
+    }
+  });
+
+  // 语言切换
+  document.querySelectorAll('.language-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const lang = btn.getAttribute('data-language');
+      if (lang) {
+        const newUrl = generateNewUrl(lang);
+        await i18next.changeLanguage(lang);
+        window.location.href = newUrl;
+      }
+    });
+  });
+
+  // 高亮当前语言
+  const { currentLang } = getCurrentPathInfo();
+  document.querySelectorAll('.language-btn').forEach(btn => {
+    const btnLang = btn.getAttribute('data-language');
+    if (btnLang === currentLang) {
+      btn.classList.add('bg-accent-base/10', 'font-semibold');
+    }
+  });
+
+  // 初始化时更新翻译
+  document.addEventListener('DOMContentLoaded', async () => {
+    const { currentLang } = getCurrentPathInfo();
+    await i18next.changeLanguage(currentLang);
+    document.documentElement.lang = currentLang;
+  });
+</script>

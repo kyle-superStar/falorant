@@ -7,6 +7,9 @@ import { getAllPosts } from "@/data/post";
 import PageLayout from "@/layouts/Base.astro";
 import { collectionDateSort } from "@/utils/date";
 
+// 获取当前语言
+const { lang = 'en' } = Astro.params;
+
 // Posts
 const MAX_POSTS = 10;
 const allPosts = await getAllPosts();
@@ -18,11 +21,20 @@ const allPostsByDate = allPosts
 const MAX_NOTES = 2;
 const allNotes = await getCollection("note");
 const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
+
+// 根据语言生成页面标题
+const pageTitle = lang === 'zh' ? "温森的博客" : "Winson's Blog";
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } }, // 默认英文路由 /
+    { params: { lang: 'zh' } },      // 中文路由 /zh
+  ];
+}
 ---
 
-<PageLayout meta={{ title: "Home" }}>
+<PageLayout meta={{ title: pageTitle }}>
 	<!-- Hero section -->
-	<!-- Background blur -->
 	<div class="absolute top-0 left-1/2 md:top-[-15%] -ml-[50vw] min-h-screen w-screen pointer-events-none blur-3xl opacity-50 overflow-x-hidden">
 		<div class="absolute top-[10%] right-[-40%] w-[65%] h-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent rounded-full opacity-30 dark:opacity-10"></div>
 		<div class="absolute top-[10%] left-[-40%] w-[65%] h-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent rounded-full opacity-30 dark:opacity-10"></div>
@@ -41,13 +53,13 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 				<SocialList />
 			</div>
 			<div class="flex justify-center space-x-4 mt-4">
-				<a href="/posts/" class="relative flex items-center justify-center h-8 px-4 rounded-lg shadow-lg hover:brightness-110 transition-all bg-gradient-to-r from-accent-one to-accent-two">
+				<a href={`${lang === 'zh' ? '/zh' : ''}/posts/`} class="relative flex items-center justify-center h-8 px-4 rounded-lg shadow-lg hover:brightness-110 transition-all bg-gradient-to-r from-accent-one to-accent-two">
 					<span class="text-bgColor font-semibold" data-i18n="nav.blog">
 						<!-- 由i18next填充 -->
 					</span>
 				</a>
 
-				<a href="/notes/wake-up/" class="relative flex items-center justify-center h-8 px-4 rounded-lg shadow-lg bg-special-lighter hover:brightness-110 hover:bg-special-lightest">
+				<a href={`${lang === 'zh' ? '/zh' : ''}/notes/wake-up/`} class="relative flex items-center justify-center h-8 px-4 rounded-lg shadow-lg bg-special-lighter hover:brightness-110 hover:bg-special-lightest">
 					<span class="bg-clip-text text-transparent font-semibold bg-gradient-to-r from-accent-one to-accent-two" data-i18n="nav.wakeUp">
 						<!-- 由i18next填充 -->
 					</span>
@@ -59,7 +71,7 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 	<!-- Posts Section -->
 	<section aria-label="Blog post list" class="'mt-[-100vh] pt-[100vh]'">
 		<h2 class="title mb-6 text-xl text-accent-two">
-			<a href="/posts/" data-i18n="sections.posts">
+			<a href={`${lang === 'zh' ? '/zh' : ''}/posts/`} data-i18n="sections.posts">
 				<!-- 由i18next填充 -->
 			</a>
 		</h2>
@@ -79,7 +91,7 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 		latestNotes.length > 0 && (
 			<section class="mt-12">
 				<h2 class="title mb-6 text-accent-two">
-					<a href="/notes/" data-i18n="sections.notes">
+					<a href={`${lang === 'zh' ? '/zh' : ''}/notes/`} data-i18n="sections.notes">
 						<!-- 由i18next填充 -->
 					</a>
 				</h2>
@@ -98,12 +110,13 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 </PageLayout>
 
 <script>
-  import i18next from '../i18n/config';
+  import i18next from '@/i18n/config';
 
   // 初始化时设置语言
   document.addEventListener('DOMContentLoaded', async () => {
-    const savedLang = localStorage.getItem('preferred-lang') || 'en';
-    await i18next.changeLanguage(savedLang);
+    const path = window.location.pathname;
+    const lang = path.startsWith('/zh') ? 'zh' : 'en';
+    await i18next.changeLanguage(lang);
     updatePageTexts();
   });
 
@@ -126,10 +139,4 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
   i18next.on('languageChanged', () => {
     updatePageTexts();
   });
-
-  // 监听i18next初始化完成事件
-  document.addEventListener('i18n-initialized', () => {
-    updatePageTexts();
-  });
-</script>
-
+</script> 

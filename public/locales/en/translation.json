@@ -1,0 +1,33 @@
+{
+  "site": {
+    "title": "Winson's Blog",
+    "description": "An opinionated starter theme for Astro"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog Posts",
+    "notes": "Quick Notes",
+    "docs": "Docs",
+    "wakeUp": "Wake Up"
+  },
+  "home": {
+    "intro": "Hi, I'm Winson",
+    "description": "Welcome to my personal blog where I share thoughts on technology and life.",
+    "readBlog": "Read Blog"
+  },
+  "sections": {
+    "posts": "Latest Posts",
+    "notes": "Quick Notes"
+  },
+  "languages": {
+    "select": "Select language",
+    "en": "English",
+    "zh": "中文"
+  },
+  "footer": {
+    "powered_by": "Powered by",
+    "and": "and",
+    "theme_by": "Theme by"
+  }
+} 

@@ -26,6 +26,9 @@
     "astro-webmanifest": "^1.0.0",
     "cssnano": "^7.0.6",
     "hastscript": "^9.0.0",
+    "i18next": "^24.2.2",
+    "i18next-browser-languagedetector": "^8.0.4",
+    "i18next-http-backend": "^3.0.2",
     "mdast-util-directive": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.2",
     "mdast-util-to-string": "^4.0.0",
@@ -60,6 +63,10 @@
     "typescript": "^5.7.2"
   },
   "pnpm": {
-		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "sharp"]
-	}
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild",
+      "sharp"
+    ]
+  }
 }

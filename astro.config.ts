@@ -7,11 +7,13 @@ import robotsTxt from "astro-robots-txt";
 import webmanifest from "astro-webmanifest";
 import { defineConfig, envField } from "astro/config";
 import { siteConfig } from "./src/site.config";
+import { SITE_URL } from "./src/data/config";
 
 // Remark plugins
 import remarkDirective from "remark-directive"; /* handle ::: directives as nodes */
 import { remarkAdmonitions } from "./src/plugins/remark-admonitions"; /* add admonitions */
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
+import remarkUnwrapImages from "remark-unwrap-images";
 
 // Rehype plugins
 import rehypeExternalLinks from "rehype-external-links";
@@ -81,7 +83,7 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
 
-    remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions],
+    remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions, remarkUnwrapImages],
     remarkRehype: {
       footnoteLabelProperties: {
         className: [""],
@@ -114,8 +116,7 @@ export default defineConfig({
   },
   // https://docs.astro.build/en/guides/prefetch/
   prefetch: true,
-  // ! Please remember to replace the following site property with your own domain
-  site: "http://astrocitrus.artemkutsan.pp.ua/",
+  site: SITE_URL,
   vite: {
     build: {
       sourcemap: true, // Source maps generation
@@ -148,6 +149,21 @@ export default defineConfig({
     // port: 1234,
     host: true,
   },
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "zh"],
+    routing: {
+      prefixDefaultLocale: false,
+      strategy: "pathname"
+    },
+  },
+  trailingSlash: "never",
+  build: {
+    format: "file",
+  },
+  output: "serve",
+  adapter: undefined, // 根据你的部署平台选择适当的适配器
+  middleware: true, // 启用中间件支持
 });
 
 function rawFonts(ext: string[]) {
